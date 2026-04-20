@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>From</title>
+  <link rel="stylesheet" href="style">
+  <style>
+    body {
+      background: #0b0c2a;
+    }
+    h4 {
+      text-align: center;
+      color: #96BB54;
+    }
+    .contenedor {
+      text-align: center;
+    }
+    #videoFrame {
+      border-radius: 12px;
+    }
+    .responsive-iframe-container {
+      aspect-ratio: 16 / 9;
+      max-width: 980px;
+      margin: 0 auto;
+      overflow: hidden;
+      border-radius: 12px;
+    }
+    .responsive-iframe-container iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
+      display: block;
+      border-radius: 12px;
+    }
+    .tempo,
+    .contenedor {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+      margin: 10px auto;
+      max-width: 100%;
+      padding: 0 10px;
+    }
+    .boton {
+      display: inline-block;
+      padding: 10px 16px;
+      font-size: 14px;
+      text-align: center;
+      background-color: #2c3e50;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      text-decoration: none;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      min-width: 80px;
+      flex: 1 1 auto;
+      margin: 10px;
+    }
+    .boton.activa {
+      background-color: #e67e22;
+    }
+    .boton.anterior,
+    .boton.siguiente {
+      background-color: #34495e;
+    }
+    .boton:hover {
+      background-color: #1abc9c;
+    }
+    @media (max-width: 600px) {
+      .boton {
+        font-size: 12px;
+        padding: 8px 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h4 id="titulo"></h4>
+
+  <div class="responsive-iframe-container">
+    <iframe id="videoFrame" src="" allowfullscreen></iframe>
+  </div>
+
+  <div class="tempo">
+    <a href="#" id="btnTemp1" class="boton menu" onclick="mostrarTemporada(1)">Temporada 1</a>
+    <a href="#" id="btnTemp2" class="boton menu" onclick="mostrarTemporada(2)">Temporada 2</a>
+  <a href="#" id="btnTemp3" class="boton menu" onclick="mostrarTemporada(3)">Temporada 3</a>
+  </div>
+
+  <div id="temporada1" class="contenedor">
+    <a href="../index.html" class="boton ep">Películas</a>
+    <div id="episodios1"></div>
+    <div class="navegacion">
+      <a href="#" class="boton anterior" onclick="cambiarPagina(1, -1)">⟨ Anterior</a>
+      <a href="#" class="boton siguiente" onclick="cambiarPagina(1, 1)">Siguiente ⟩</a>
+    </div>
+  </div>
+
+  <div id="temporada2" class="contenedor" style="display:none;">
+    <a href="../index.html" class="boton ep">Películas</a>
+    <div id="episodios2"></div>
+    <div class="navegacion">
+      <a href="#" class="boton anterior" onclick="cambiarPagina(2, -1)">⟨ Anterior</a>
+      <a href="#" class="boton siguiente" onclick="cambiarPagina(2, 1)">Siguiente ⟩</a>
+    </div>
+  </div>
+  
+  <div id="temporada3" class="contenedor" style="display:none;">
+  <a href="../index.html" class="boton ep">Películas</a>
+  <div id="episodios3"></div>
+  <div class="navegacion">
+    <a href="#" class="boton anterior" onclick="cambiarPagina(3, -1)">⟨ Anterior</a>
+    <a href="#" class="boton siguiente" onclick="cambiarPagina(3, 1)">Siguiente ⟩</a>
+  </div>
+</div>
+
+
+<script>
+  const episodioPorPagina = 6;
+  const paginaActual = { 1: 0, 2: 0, 3: 0 };
+
+  const enlaces = {
+        // Temporada 1
+        1: "https://goodstream.one/embed-8e4qyqquwiow.html",
+        2: "https://goodstream.one/embed-q6pp8d7wh4ll.html", 
+        3: "https://goodstream.one/embed-puj36rguf68r.html",
+        4: "https://goodstream.one/embed-otzfe7xpgw7x.html",
+        5: "https://goodstream.one/embed-fw22c748bmkf.html",
+        6: "https://goodstream.one/embed-t6kvgu2mxe3f.html",
+        7: "https://goodstream.one/embed-xk7kzs3eiflp.html",
+        8: "https://goodstream.one/embed-sxankqmbvfpe.html",
+        9: "https://goodstream.one/embed-ji031mdripfs.html",
+        10: "https://goodstream.one/embed-lk1g0u8auvc7.html",
+       //Temporada 2
+        11: "https://goodstream.one/embed-wbluj08v3kfx.html",
+        12: "https://goodstream.one/embed-i2qsndrw92ku.html",
+        13: "https://goodstream.one/embed-vfx29j0vnwsy.html",
+        14: "https://goodstream.one/embed-pgrxzhgl53l5.html",
+        15: "https://goodstream.one/embed-dokd9f5pg3at.html",
+        16: "https://goodstream.one/embed-kr4mciawoofz.html",
+        17: "https://goodstream.one/embed-skamq9l75xp5.html",
+        18: "https://goodstream.one/embed-0a08kls97lk2.html",
+        19: "https://goodstream.one/embed-5r4l2fx96lha.html",
+        20: "https://goodstream.one/embed-4y9oit9ir0kw.html",
+        //Temporada 3
+        21: "https://goodstream.one/embed-9nsy9hmczuuw.html",
+        22: "https://goodstream.one/embed-nj4vofpg7tib.html",
+        23: "https://goodstream.one/embed-jid3f53u87z2.html",
+        24: "https://goodstream.one/embed-iet1ipo4sats.html",
+        25: "https://goodstream.one/embed-hi929gbw0tpj.html",
+        26: "https://goodstream.one/embed-kphinib372xo.html",
+        27: "https://goodstream.one/embed-b5f3f8m2jdkc.html",
+        28: "https://goodstream.one/embed-3qkcexsmvjp9.html",
+        29: "https://goodstream.one/embed-stvpjj9l153a.html",
+        30: "https://goodstream.one/embed-hs7ae6pah9vw.html",
+        // ... agrega más enlaces según episodios
+      };
+      
+      function generarBotones() {
+    const contenedor1 = document.getElementById("episodios1");
+    const contenedor2 = document.getElementById("episodios2");
+    const contenedor3 = document.getElementById("episodios3");
+    for (let i = 1; i <= 10; i++) {
+      const btn = document.createElement("a");
+      btn.href = "#";
+      btn.className = "boton ep";
+      btn.textContent = `Ep ${String(i).padStart(2, '0')}`;
+      btn.onclick = () => cargarEpisodio(i);
+      contenedor1.appendChild(btn);
+    }
+
+    for (let i = 11; i <= 20; i++) {
+      const btn = document.createElement("a");
+      btn.href = "#";
+      btn.className = "boton ep";
+      btn.textContent = `Ep ${String(i - 10).padStart(2, '0')}`;
+      btn.onclick = () => cargarEpisodio(i);
+      contenedor2.appendChild(btn);
+    }
+    for (let i = 21; i <= 30; i++) { // ajusta el rango según tus episodios
+  const btn = document.createElement("a");
+  btn.href = "#";
+  btn.className = "boton ep";
+  btn.textContent = `Ep ${String(i - 20).padStart(2, '0')}`;
+  btn.onclick = () => cargarEpisodio(i);
+  contenedor3.appendChild(btn);
+}
+  }
+
+  function mostrarTemporada(num) {
+  for (let i = 1; i <= 3; i++) {
+    document.getElementById(`temporada${i}`).style.display = i === num ? "block" : "none";
+  }
+  
+  paginaActual[num] = 0;
+  actualizarBotones(num);
+  document.querySelectorAll(".boton.menu").forEach(btn => btn.classList.remove("activa"));
+  document.getElementById(`btnTemp${num}`).classList.add("activa");
+
+      // Cargar episodio 1 de la temporada seleccionada
+  if (num === 1) {
+    cargarEpisodio(1);   // Episodio 1 de Temporada 1
+  } else if (num === 2) {
+    cargarEpisodio(11);  // Episodio 1 de Temporada 2
+  } else if (num === 3) {
+    cargarEpisodio(21);  // Episodio 1 de Temporada 3
+  }
+}
+  
+
+
+  function cargarEpisodio(num) {
+  const iframe = document.getElementById("videoFrame");
+  let tempNum = 1;
+  if (num <= 10) tempNum = 1;
+  else if (num <= 20) tempNum = 2;
+  else tempNum = 3;
+
+  const epNum = tempNum === 1 ? num :
+                tempNum === 2 ? num - 10 :
+                num - 20;
+
+  iframe.src = enlaces[num];
+  document.getElementById("titulo").textContent = `from T${tempNum} Ep ${epNum}`;
+}
+
+
+  function actualizarBotones(temporada) {
+    const contenedor = document.getElementById(`episodios${temporada}`);
+    const botones = contenedor.querySelectorAll(".boton.ep");
+    const total = botones.length;
+    const inicio = paginaActual[temporada] * episodioPorPagina;
+    const fin = inicio + episodioPorPagina;
+
+    botones.forEach((btn, i) => {
+      btn.style.display = i >= inicio && i < fin ? "inline-block" : "none";
+    });
+
+    const nav = document.querySelector(`#temporada${temporada} .navegacion`);
+    nav.querySelector(".anterior").style.display = paginaActual[temporada] > 0 ? "inline-block" : "none";
+    nav.querySelector(".siguiente").style.display = fin < total ? "inline-block" : "none";
+  }
+
+  function cambiarPagina(temporada, direccion) {
+    const contenedor = document.getElementById(`episodios${temporada}`);
+    const totalBotones = contenedor.querySelectorAll(".boton.ep").length;
+    const maxPaginas = Math.ceil(totalBotones / episodioPorPagina);
+
+    const nuevaPagina = paginaActual[temporada] + direccion;
+    if (nuevaPagina >= 0 && nuevaPagina < maxPaginas) {
+      paginaActual[temporada] = nuevaPagina;
+      actualizarBotones(temporada);
+    }
+  }
+
+  window.onload = () => {
+    generarBotones();
+    mostrarTemporada(1);
+  };
+</script>
+
+</body>
+
+</html>
